@@ -2,149 +2,190 @@
 <html>
 <head>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <img id="chick" src="chick.png" width="50" height="50" style="display:none">
 <img id="chicken" src="chicken.png" width="50" height="50" style="display:none">
 <img id="rooster" src="rooster.png" width="50" height="50" style="display:none">
 <img id="goose" src="goose.png" width="50" height="50" style="display:none">
 
 
-<script>
-var calc_mem = 0;
-var calc_operation = "";
-const calc_locations = [];
-
-function draw_all() {
-        clear();
-        for (let i = 0; i < calc_locations.length; i++)
-        {
-                draw(i);
-        }
+<style>
+main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 }
 
-function draw(col_n) {
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        var img = document.getElementById("chick");
-        if (col_n == 0) {
-                img = document.getElementById("chick");
-        }
-        if (col_n == 1) {
-                img = document.getElementById("chicken");
-        }
-        if (col_n == 2) {
-                img = document.getElementById("rooster");
-        }
-        if (col_n == 3) {
-                img = document.getElementById("goose");
-        }
-        for (let i = 0; i<calc_locations[col_n].length; i++) {
-                loc = calc_locations[col_n][i];
-                ctx.drawImage(img, loc.x, loc.y, 50, 50)
-        }
+.calc_keys_flex { 
+        display:flex;
+        flex-direction:column;
+        max-width:500px;
+        flex: 1 1 0;
 }
 
-function clear() {
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-    ctx.clearRect(0, 0, 250, 300)
+.key_row_flex {
+        display:flex; 
+        flex-direction:row ;
+        flex: 1 1 0;
 }
 
-const eval_current = function eval_current() {
-        var working = 0;
-        var col_val = 1;
-        while (calc_locations.length > 0) {
-                working += col_val * calc_locations.shift().length;
-                col_val = col_val * 10;
-        }
-        return working;
+button_flex { 
+
+        height: 60px;
+        flex: 1 1 0;
 }
-
-function spawnChick(n) {
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        var img = document.getElementById("chick");
-        const units = [];
-        for (let i = 0; i < n; i++) {
-                var x = 200*Math.random();
-                var y = 250*Math.random();
-                units.push({x:x, y:y});
-        }
-        calc_locations.unshift(units);
-}
-
-function num_key_press(n) {
-        spawnChick(n);
-        draw_all();
-}
-
-function plus_key_press() {
-        clear();
-        calc_mem = eval_current();
-        calc_operation = "plus";
-}
-
-function minus_key_press() {
-        clear();
-        calc_mem = eval_current();
-        calc_operation = "minus";
-}
-
-function eq_key_press() {
-        clear();
-
-        if (calc_operation == "plus") {
-                calc_mem += eval_current();
-        }
-        if (calc_operation == "minus") {
-                calc_mem -= eval_current();
-        }
-
-        var working = calc_mem;
-        var cols = Math.floor(Math.log10(calc_mem)) + 1;
-        for (let i= cols-1; i>=0; i--) {
-                var col_val = Math.pow(10, i);
-                var digit = Math.floor(working / col_val);
-                num_key_press(digit);
-                working -= col_val * digit;
-        }
-}
-
-
-</script>
+</style>
 
 </head>
 <body>
+
 <h1>Chicken Calculator</h1>
+<p id="writewidth">Replace with screen width</p>
 
+<main>
 
-<canvas id="myCanvas" width="250" height="300" style="border:1px solid #d3d3d3;"></canvas>
+<canvas id="myCanvas" width="330" height="300" style="border:1px solid #d3d3d3;"></canvas>
 
-<div style="display:flex;flex-direction:column">
+<div class="calc_keys">
 
-<div style="display:flex; flex-direction:row ">
-<button onclick="num_key_press(1)" style="flex: 1 1 0">1</button>
-<button onclick="num_key_press(2)" style="flex: 1 1 0">2</button>
-<button onclick="num_key_press(3)" style="flex: 1 1 0">3</button>
-<button onclick="plus_key_press()" style="flex: 1 1 0">+</button>
+<div class="key_row">
+<button onclick="num_key_press(1)">1</button>
+<button onclick="num_key_press(2)">2</button>
+<button onclick="num_key_press(3)">3</button>
+<button onclick="plus_key_press()">+</button>
 </div>
-<div style="display:flex; flex-direction:row">
+<div class="key_row">
 <button onclick="num_key_press(4)">4</button>
 <button onclick="num_key_press(5)">5</button>
 <button onclick="num_key_press(6)">6</button>
 <button onclick="minus_key_press()">-</button>
 </div>
-<div style="display:flex; flex-direction:row">
+<div class="key_row">
 <button onclick="num_key_press(7)">7</button>
 <button onclick="num_key_press(8)">8</button>
 <button onclick="num_key_press(9)">9</button>
 <button onclick="eq_key_press()">=</button>
 </div>
-<div style="display:flex; flex-direction:row">
+<div class="key_row">
 <button onclick="num_key_press(0)">0</button>
 </div>
 
 </div>
 
 
+</main>
+
+        <script>
+                const canv_width = 330
+                const canv_height = 330
+                var calc_mem = 0;
+                var calc_operation = "";
+                const calc_locations = [];
+                var p = document.getElementById("writewidth");
+                p.innerHTML = `Screen width is: ${window.innerWidth}` ;
+
+                var c = document.getElementById("myCanvas");
+                c.width = canv_width;
+                c.height = canv_height;
+
+                function draw_all() {
+                        clear();
+                        for (let i = 0; i < calc_locations.length; i++)
+                        {
+                                draw(i);
+                        }
+                }
+
+                function draw(col_n) {
+                        var c = document.getElementById("myCanvas");
+                        var ctx = c.getContext("2d");
+                        var img = document.getElementById("chick");
+                        if (col_n == 0) {
+                                img = document.getElementById("chick");
+                        }
+                        if (col_n == 1) {
+                                img = document.getElementById("chicken");
+                        }
+                        if (col_n == 2) {
+                                img = document.getElementById("rooster");
+                        }
+                        if (col_n == 3) {
+                                img = document.getElementById("goose");
+                        }
+                        for (let i = 0; i<calc_locations[col_n].length; i++) {
+                                loc = calc_locations[col_n][i];
+                                ctx.drawImage(img, loc.x, loc.y, 50, 50)
+                        }
+                }
+
+                function clear() {
+                    var c = document.getElementById("myCanvas");
+                    var ctx = c.getContext("2d");
+                    ctx.clearRect(0, 0, screen.width, 300)
+                }
+
+                const eval_current = function eval_current() {
+                        var working = 0;
+                        var col_val = 1;
+                        while (calc_locations.length > 0) {
+                                working += col_val * calc_locations.shift().length;
+                                col_val = col_val * 10;
+                        }
+                        return working;
+                }
+
+                function spawnChick(n) {
+                        var c = document.getElementById("myCanvas");
+                        var ctx = c.getContext("2d");
+                        var img = document.getElementById("chick");
+                        const units = [];
+                        for (let i = 0; i < n; i++) {
+                                var x = 200*Math.random();
+                                var y = 250*Math.random();
+                                units.push({x:x, y:y});
+                        }
+                        calc_locations.unshift(units);
+                }
+
+                function num_key_press(n) {
+                        spawnChick(n);
+                        draw_all();
+                }
+
+                function plus_key_press() {
+                        clear();
+                        calc_mem = eval_current();
+                        calc_operation = "plus";
+                }
+
+                function minus_key_press() {
+                        clear();
+                        calc_mem = eval_current();
+                        calc_operation = "minus";
+                }
+
+                function eq_key_press() {
+                        clear();
+
+                        if (calc_operation == "plus") {
+                                calc_mem += eval_current();
+                        }
+                        if (calc_operation == "minus") {
+                                calc_mem -= eval_current();
+                        }
+
+                        var working = calc_mem;
+                        var cols = Math.floor(Math.log10(calc_mem)) + 1;
+                        for (let i= cols-1; i>=0; i--) {
+                                var col_val = Math.pow(10, i);
+                                var digit = Math.floor(working / col_val);
+                                num_key_press(digit);
+                                working -= col_val * digit;
+                        }
+                }
+
+
+        </script>
 </body>
 </html>
