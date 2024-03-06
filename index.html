@@ -17,31 +17,22 @@ main {
         align-items: center;
 }
 
-.calc_keys_flex { 
-        display:flex;
-        flex-direction:column;
-        max-width:500px;
-        flex: 1 1 0;
+.calc_keys { 
+        display: grid;
+        grid-template-columns: 50px 50px 50px 50px;
+        grid-template-rows: 50px 50px 50px 50px;
 }
-
-.key_row_flex {
-        display:flex; 
-        flex-direction:row ;
-        flex: 1 1 0;
-}
-
-button_flex { 
-
-        height: 60px;
-        flex: 1 1 0;
+button { 
 }
 </style>
 
 </head>
 <body>
 
-<h1>Chicken Calculator</h1>
-<p id="writewidth">Replace with screen width</p>
+<header>
+        <h1>Chicken Calculator</h1>
+        <p id="writewidth">Replace with screen width</p>
+<header>
 
 <main>
 
@@ -49,27 +40,19 @@ button_flex {
 
 <div class="calc_keys">
 
-<div class="key_row">
 <button onclick="num_key_press(1)">1</button>
 <button onclick="num_key_press(2)">2</button>
 <button onclick="num_key_press(3)">3</button>
 <button onclick="plus_key_press()">+</button>
-</div>
-<div class="key_row">
 <button onclick="num_key_press(4)">4</button>
 <button onclick="num_key_press(5)">5</button>
 <button onclick="num_key_press(6)">6</button>
 <button onclick="minus_key_press()">-</button>
-</div>
-<div class="key_row">
 <button onclick="num_key_press(7)">7</button>
 <button onclick="num_key_press(8)">8</button>
 <button onclick="num_key_press(9)">9</button>
 <button onclick="eq_key_press()">=</button>
-</div>
-<div class="key_row">
 <button onclick="num_key_press(0)">0</button>
-</div>
 
 </div>
 
