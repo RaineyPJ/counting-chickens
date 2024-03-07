@@ -33,7 +33,11 @@ canvas {
         grid-template-columns: 50px 50px 50px 50px;
         grid-template-rows: 50px 50px 50px 50px;
 }
-button { 
+.key_0 { 
+        grid-column: 2 / 3;
+}
+.key_eq { 
+        grid-column: 4 / 5;
 }
 </style>
 
@@ -53,16 +57,17 @@ button {
 <button onclick="num_key_press(1)">1</button>
 <button onclick="num_key_press(2)">2</button>
 <button onclick="num_key_press(3)">3</button>
-<button onclick="plus_key_press()">+</button>
+<button onclick="ac_key_press()">AC</button>
 <button onclick="num_key_press(4)">4</button>
 <button onclick="num_key_press(5)">5</button>
 <button onclick="num_key_press(6)">6</button>
-<button onclick="minus_key_press()">-</button>
+<button onclick="plus_key_press()">+</button>
 <button onclick="num_key_press(7)">7</button>
 <button onclick="num_key_press(8)">8</button>
 <button onclick="num_key_press(9)">9</button>
-<button onclick="eq_key_press()">=</button>
-<button onclick="num_key_press(0)">0</button>
+<button onclick="minus_key_press()">-</button>
+<button class="key_0" onclick="num_key_press(0)">0</button>
+<button class="key_eq" onclick="eq_key_press()">=</button>
 
 </div>
 
@@ -72,8 +77,12 @@ button {
         <script>
                 const canv_width = 330
                 const canv_height = 330
+
                 var calc_mem = 0;
+                var calc_operator_val = 0;
                 var calc_operation = "";
+                var awaiting_operator_val = false;
+
                 const calc_locations = [];
 
                 var c = document.getElementById("myCanvas");
@@ -111,10 +120,10 @@ button {
                 }
 
                 function clear() {
-                    var c = document.getElementById("myCanvas");
-                    var ctx = c.getContext("2d");
+                        var c = document.getElementById("myCanvas");
+                        var ctx = c.getContext("2d");
                         ctx.fillStyle = "lightgray"
-                    ctx.fillRect(0, 0, canv_width, canv_height)
+                        ctx.fillRect(0, 0, canv_width, canv_height)
                 }
 
                 const eval_current = function eval_current() {
@@ -145,30 +154,11 @@ button {
                         draw_all();
                 }
 
-                function plus_key_press() {
+                function display_value(val) {
                         clear();
-                        calc_mem = eval_current();
-                        calc_operation = "plus";
-                }
-
-                function minus_key_press() {
-                        clear();
-                        calc_mem = eval_current();
-                        calc_operation = "minus";
-                }
-
-                function eq_key_press() {
-                        clear();
-
-                        if (calc_operation == "plus") {
-                                calc_mem += eval_current();
-                        }
-                        if (calc_operation == "minus") {
-                                calc_mem -= eval_current();
-                        }
-
-                        var working = calc_mem;
-                        var cols = Math.floor(Math.log10(calc_mem)) + 1;
+                        while (calc_locations.length > 0) { calc_locations.pop() }
+                        var working = val;
+                        var cols = Math.floor(Math.log10(val)) + 1;
                         for (let i= cols-1; i>=0; i--) {
                                 var col_val = Math.pow(10, i);
                                 var digit = Math.floor(working / col_val);
@@ -177,7 +167,60 @@ button {
                         }
                 }
 
+                function execute_op(execute_when_not_awaiting) {
+                        if (awaiting_operator_val)
+                        {
+                                calc_operator_val = eval_current();
+                        }
 
+                        // These lines should execute in the 5+5== case
+                        // where awaiting_operator_val is false
+                                // If we are in a 5+5+ case, we need to execute
+                                // But need to be careful about the 5+5=+ case.
+                                // We have a calc_operation == "plus", but we don't want to execute it
+                                // On the other hand if we have 5+5, we need a simple way to get the current into the memory
+
+                        // Still not working in the 2+2+2= case!!
+                        var can_operate = execute_when_not_awaiting || awaiting_operator_val;
+                        if (calc_operation == "plus" && can_operate) {
+                                calc_mem += calc_operator_val;
+                        }
+                        else if (calc_operation == "minus" && can_operate) {
+                                calc_mem -= calc_operator_val;
+                        }
+                        else {
+                                calc_mem = eval_current();
+                        }
+
+                        awaiting_operator_val = false;
+                }
+
+                function eq_key_press() {
+                        execute_op(true);
+                        display_value(calc_mem);
+                }
+
+                function plus_key_press() {
+                        execute_op(false);
+                        clear();
+                        calc_operation = "plus";
+                        awaiting_operator_val = true;
+                }
+
+                function minus_key_press() {
+                        execute_op();
+                        clear();
+                        calc_operation = "minus";
+                        awaiting_operator_val = true;
+                }
+
+                function ac_key_press() {
+                        display_value(0);
+                        calc_operation = "";
+                        awaiting_operator_val = false;
+                        calc_operator_val = 0;
+                        calc_mem = 0;
+                }
         </script>
 </body>
 </html>
