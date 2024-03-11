@@ -143,8 +143,8 @@ canvas {
                         var img = document.getElementById("chick");
                         const units = [];
                         for (let i = 0; i < n; i++) {
-                                var x = 200*Math.random();
-                                var y = 250*Math.random();
+                                var x = (canv_width - 50) * Math.random();
+                                var y = (canv_height - 50) * Math.random();
                                 units.push({x:x, y:y});
                         }
                         calc_locations.unshift(units);
