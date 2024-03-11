@@ -13,13 +13,22 @@
 
 <style>
 h1 {
+        font-size: 15px;
         margin: auto;
         width: 300px;
 }
 main {
         margin: auto;
         width: 350px;
-        background-color: gray;
+        background-color: #5c5e75;
+        border-radius: 20px;
+}
+
+h1.chickio {
+        font-size: 25px;
+        color: lightgray;
+        text-align: center;
+        font-family: "Arial Black", Helvetica, sans-serif;
 }
 
 canvas {
@@ -28,6 +37,35 @@ canvas {
 
 button {
         font-size: 30px;
+        color: #edeef7;
+        background-color: hsl(0, 0%, 50%);
+        border-radius: 10px;
+}
+button:hover {
+        background-color: hsl(0, 0%, 40%);
+}
+button:active {
+        background-color: hsl(0, 0%, 30%);
+}
+
+button.pink {
+        background-color: #ff6666;
+}
+
+button.pink:active {
+        background-color: #963333;
+}
+
+button.black {
+        background-color: hsl(0, 0%, 30%);
+}
+
+button.black:hover {
+        background-color: hsl(0, 0%, 20%);
+}
+
+button.black:active {
+        background-color: hsl(0, 0%, 10%);
 }
 
 .calc_keys { 
@@ -54,6 +92,8 @@ button {
 
 <main>
 
+<h1 class="chickio">CHICKIO</h1>
+
 <canvas id="myCanvas" width="330" height="300" style="border:1px solid #d3d3d3;"></canvas>
 
 <div class="calc_keys">
@@ -61,17 +101,17 @@ button {
 <button onclick="num_key_press(1)">1</button>
 <button onclick="num_key_press(2)">2</button>
 <button onclick="num_key_press(3)">3</button>
-<button onclick="ac_key_press()">AC</button>
+<button onclick="ac_key_press()" class="pink">AC</button>
 <button onclick="num_key_press(4)">4</button>
 <button onclick="num_key_press(5)">5</button>
 <button onclick="num_key_press(6)">6</button>
-<button onclick="plus_key_press()">+</button>
+<button onclick="plus_key_press()" class="black">+</button>
 <button onclick="num_key_press(7)">7</button>
 <button onclick="num_key_press(8)">8</button>
 <button onclick="num_key_press(9)">9</button>
-<button onclick="minus_key_press()">-</button>
-<button class="key_0" onclick="num_key_press(0)">0</button>
-<button class="key_eq" onclick="eq_key_press()">=</button>
+<button onclick="minus_key_press()" class="black">-</button>
+<button onclick="num_key_press(0)" class="key_0">0</button>
+<button onclick="eq_key_press()" class="key_eq black">=</button>
 
 </div>
 
