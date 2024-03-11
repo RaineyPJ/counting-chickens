@@ -210,9 +210,10 @@ button.black:active {
                         for (let i= cols-1; i>=0; i--) {
                                 var col_val = Math.pow(10, i);
                                 var digit = Math.floor(working / col_val);
-                                num_key_press(digit);
+                                spawnChick(digit);
                                 working -= col_val * digit;
                         }
+                        draw_all();
                 }
 
                 function execute_op(execute_when_not_awaiting) {
