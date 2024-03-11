@@ -82,6 +82,7 @@ canvas {
                 var calc_operator_val = 0;
                 var calc_operation = "";
                 var awaiting_operator_val = false;
+                var is_displaying_ans = false;
 
                 const calc_locations = [];
 
@@ -150,6 +151,9 @@ canvas {
                 }
 
                 function num_key_press(n) {
+                        if (is_displaying_ans) {
+                                ac_key_press();
+                        }
                         spawnChick(n);
                         draw_all();
                 }
@@ -198,11 +202,13 @@ canvas {
                 function eq_key_press() {
                         execute_op(true);
                         display_value(calc_mem);
+                        is_displaying_ans = true;
                 }
 
                 function plus_key_press() {
                         execute_op(false);
                         clear();
+                        is_displaying_ans = false;
                         calc_operation = "plus";
                         awaiting_operator_val = true;
                 }
@@ -210,12 +216,14 @@ canvas {
                 function minus_key_press() {
                         execute_op();
                         clear();
+                        is_displaying_ans = false;
                         calc_operation = "minus";
                         awaiting_operator_val = true;
                 }
 
                 function ac_key_press() {
                         display_value(0);
+                        is_displaying_ans = false;
                         calc_operation = "";
                         awaiting_operator_val = false;
                         calc_operator_val = 0;
